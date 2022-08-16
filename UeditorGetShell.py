@@ -3,6 +3,9 @@ import json
 import click
 import requests
 from requests.exceptions import ChunkedEncodingError, ConnectionError, ConnectTimeout
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 def check_shell(url_path, path):
 
@@ -119,7 +122,7 @@ def main(url, vps_file, vul_path):
     if url:
         if not vul_path:
             url_path = probe_path(url)
-            if url_path.startswith("ERROR:"):
+            if str(url_path).startswith("ERROR:"):
                 click.secho(url_path, fg="red")
                 sys.exit(0)
             elif not url_path:
